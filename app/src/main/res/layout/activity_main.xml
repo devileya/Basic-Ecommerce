@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.MainActivity"
+    android:id="@+id/root_layout">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorPrimary"
+        app:elevation="0dp">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_collapseMode="pin"
+            app:contentInsetStartWithNavigation="0dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/margin_padding_8dp">
+            <ImageView
+                android:id="@+id/btn_fav"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_heart"
+                android:layout_marginRight="@dimen/margin_padding_8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_rounded_gradient"
+                android:backgroundTint="@color/colorBacground"
+                android:paddingStart="@dimen/margin_padding_16dp"
+                android:paddingEnd="0dp"
+                android:layout_marginEnd="@dimen/margin_padding_16dp"
+                android:layout_marginTop="@dimen/margin_padding_8dp"
+                android:layout_marginBottom="@dimen/margin_padding_8dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_complete_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textColor="@color/black"
+                    android:hint="@string/search"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    />
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textColor="@color/black"
+                    android:hint="@string/search"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:padding="@dimen/margin_padding_8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/bg_rounded_gradient"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_search"
+                        android:tint="@color/white"
+                        android:layout_marginEnd="@dimen/margin_padding_8dp"
+                        tools:ignore="contentDescription"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/search"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:layout_marginEnd="@dimen/margin_padding_8dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <fragment
+        android:id="@+id/navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_appbar"
+        app:navGraph="@navigation/nav_graph"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/nav_bottom_selector"
+        app:itemTextColor="@color/nav_bottom_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        tools:listItem="@layout/list_item_category"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

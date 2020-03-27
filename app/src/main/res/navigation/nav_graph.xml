@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation_graph"
+    app:startDestination="@+id/homeFragment">
+
+    <action
+        android:id="@+id/goToFavorite"
+        app:destination="@id/favoriteFragment"
+        />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.devileya.basicecommerce.presentation.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/goToDetail"
+            app:destination="@id/detailFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.devileya.basicecommerce.presentation.feed.FeedFragment"
+        android:label="FeedFragment"
+        tools:layout="@layout/feed_fragment">
+        <action
+            android:id="@+id/goToDetail"
+            app:destination="@id/detailFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.devileya.basicecommerce.presentation.cart.CartFragment"
+        android:label="CartFragment"
+        tools:layout="@layout/cart_fragment">
+        <action
+            android:id="@+id/goToDetail"
+            app:destination="@id/detailFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.devileya.basicecommerce.presentation.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/profile_fragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.devileya.basicecommerce.presentation.detail.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/detail_fragment">
+        <action
+            android:id="@+id/goToCart"
+            app:destination="@id/cartFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.devileya.basicecommerce.presentation.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/favorite_fragment">
+        <action
+            android:id="@+id/goToDetail"
+            app:destination="@id/detailFragment"
+            />
+    </fragment>
+</navigation>
