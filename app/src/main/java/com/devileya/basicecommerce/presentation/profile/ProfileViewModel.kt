@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.devileya.basicecommerce.base.BaseViewModel
 import com.devileya.basicecommerce.utils.GeneralEnum
 import com.mikhaellopez.circularimageview.CircularImageView
+import timber.log.Timber
 
 /**
  * Created by Arif Fadly Siregar 2020-03-25.
@@ -24,7 +25,8 @@ class ProfileViewModel(private val sharedPreferences: SharedPreferences) : BaseV
 
 @BindingAdapter("imageUrl")
 fun loadImage(view: CircularImageView, url: String?) {
-    if (!url.isNullOrEmpty()) {
+    if (!url.isNullOrEmpty() && url != "null") {
+        Timber.d("urlImage $url")
         Glide.with(view.context)
             .load(url)
             .into(view)

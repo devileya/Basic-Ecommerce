@@ -22,6 +22,10 @@ import com.devileya.basicecommerce.base.BaseViewModel.Companion.showError
 import com.devileya.basicecommerce.base.BaseViewModel.Companion.showProgress
 import com.devileya.basicecommerce.presentation.login.LoginActivity
 import com.devileya.basicecommerce.utils.CustomProgress
+import com.facebook.AccessToken
+import com.facebook.GraphRequest
+import com.facebook.HttpMethod
+import com.facebook.login.LoginManager
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 

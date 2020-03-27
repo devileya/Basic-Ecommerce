@@ -12,6 +12,7 @@ import com.devileya.basicecommerce.databinding.ActivityLoginBinding
 import com.devileya.basicecommerce.presentation.MainActivity
 import com.devileya.basicecommerce.utils.GeneralEnum
 import com.facebook.*
+import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -37,13 +38,43 @@ class LoginActivity : AppCompatActivity() {
     private val sharedPreferences by inject<SharedPreferences>()
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var mAccessTokenTracker: AccessTokenTracker
     private lateinit var mProfileTracker: ProfileTracker
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.setVariable(BR.viewModel, viewModel)
         binding.executePendingBindings()
+
+        if (AccessToken.getCurrentAccessToken() != null) {
+            mAccessTokenTracker = object : AccessTokenTracker() {
+                override fun onCurrentAccessTokenChanged(
+                    oldAccessToken: AccessToken,
+                    currentAccessToken: AccessToken?
+                ) {
+                    mAccessTokenTracker.stopTracking()
+                    if (currentAccessToken != null) {
+                        fetchProfile()
+                    }
+                }
+            }
+            mAccessTokenTracker.startTracking()
+            AccessToken.refreshCurrentAccessTokenAsync()
+        }
+        if (Profile.getCurrentProfile() != null) {
+            mProfileTracker = object : ProfileTracker() {
+                override fun onCurrentProfileChanged(
+                    oldProfile: Profile,
+                    currentProfile: Profile
+                ) {
+                    this.stopTracking()
+                    Profile.setCurrentProfile(currentProfile)
+                    Timber.d("currentProfile ${currentProfile.name}")
+                }
+            }
+        }
 
         if (sharedPreferences.getBoolean(GeneralEnum.IS_LOGIN.value, false)) {
             startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -81,20 +112,26 @@ class LoginActivity : AppCompatActivity() {
         LoginManager.getInstance().registerCallback(callbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
-                    Timber.d("loginfb ${loginResult.accessToken} ${Profile.getCurrentProfile()}")
-                    var profile = Profile.getCurrentProfile()
-                    mProfileTracker = object : ProfileTracker() {
-                        override fun onCurrentProfileChanged(
-                            oldProfile: Profile,
-                            currentProfile: Profile
-                        ) {
-                            Timber.d("facebook - profile", currentProfile.firstName)
-                            profile = currentProfile
-                            mProfileTracker.stopTracking()
+
+                    if (Profile.getCurrentProfile() != null) {
+                        mProfileTracker = object : ProfileTracker() {
+                            override fun onCurrentProfileChanged(
+                                oldProfile: Profile,
+                                currentProfile: Profile
+                            ) {
+                                this.stopTracking()
+                                Profile.setCurrentProfile(currentProfile)
+                                Timber.d("currentProfile ${currentProfile.name}")
+                            }
                         }
                     }
+                    
+                    mProfileTracker.startTracking()
 
-                    goToMain(GeneralEnum.FACEBOOK.value, profile.name, profile.getProfilePictureUri(200,200).toString())
+                    val profile = Profile.getCurrentProfile()
+                    Timber.d("loginfb ${loginResult.accessToken} ${Profile.getCurrentProfile()}")
+
+                    if (profile != null) goToMain(GeneralEnum.FACEBOOK.value, profile.name, profile.getProfilePictureUri(200,200).toString())
                 }
 
                 override fun onCancel() {
@@ -131,5 +168,18 @@ class LoginActivity : AppCompatActivity() {
             .apply()
         startActivity(Intent(applicationContext, MainActivity::class.java))
         finish()
+    }
+
+    private fun fetchProfile() {
+        val request = GraphRequest.newMeRequest(
+        AccessToken.getCurrentAccessToken()
+        ){ `object`, response ->
+            // this is where you should have the profile
+            Timber.d("fetched info $`object`.toString()")
+        }
+        val parameters = Bundle()
+        parameters.putString("fields", "id,name,link, profilePicture") //write the fields you need
+        request.parameters = parameters
+        request.executeAsync()
     }
 }
